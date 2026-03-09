@@ -56,6 +56,11 @@ export const messages = {
       joining: "Uniéndome…",
       connectedAs: "Conectado a la sesión: {code}",
       notConnected: "Aún no estás conectado a una sesión.",
+      Numbers: "Solo se permiten números",
+      codeIncomplete: "El código está incompleto (mínimo 6 dígitos)",
+      processing: "Procesando código...",
+      validCode: "Código válido. Uniéndote a la sesión...",
+      invalidCode: "El código no es válido",
     },
 
     theme: { toggleAria: "Cambiar tema" },
@@ -123,6 +128,11 @@ export const messages = {
       joining: "Joining…",
       connectedAs: "Connected to session: {code}",
       notConnected: "You are not connected to a session yet.",
+      Numbers: "Only numbers are allowed",
+      codeIncomplete: "The code is incomplete (minimum 6 digits)",
+      processing: "Processing code...",
+      validCode: "Valid code. Joining the session...",
+      invalidCode: "The code is not valid",
     },
 
     theme: { toggleAria: "Toggle theme" },
