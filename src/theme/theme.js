@@ -31,8 +31,16 @@ export function getCurrentTheme() {
 export function applyTheme(theme) {
   if (theme !== "light" && theme !== "dark") return;
 
+  addLog(LOG_EVENTS.THEME_CHANGE, {
+    anteriorTema: getCurrentTheme(),
+    nuevoTema: theme,
+    user: localStorage.getItem("userName") || null,
+  });
+
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem(THEME_KEY, theme);
+
+  
 }
 
 /**

@@ -33,6 +33,9 @@ export async function createSession() {
     err.code = "errors.tempCreateSession";
     throw err;
   }
+  addLog(LOG_EVENTS.LOGIN, {
+    user: localStorage.getItem("userName") || null,
+  });
 
   return makeSession();
 }
