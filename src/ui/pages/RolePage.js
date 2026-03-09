@@ -4,6 +4,7 @@
 import { setState } from "../../state/state.js";
 import { triggerRender } from "../render.js";
 import { t } from "../../i18n/i18n.js";
+import { addLog, LOG_EVENTS, getLogs } from "../../services/logService.js";
 
 export function createRolePage() {
   const container = document.createElement("main");
@@ -33,12 +34,40 @@ export function createRolePage() {
     }),
   );
 
-  container.append(title, grid);
+  const logsButton = document.createElement("button");
+  logsButton.type = "button";
+  logsButton.className = "btn btn--secondary";
+  logsButton.textContent = "Ver últimos 20 logs";
+
+  const logsContainer = document.createElement("section");
+  logsContainer.className = "logs-panel";
+  logsContainer.style.display = "none";
+
+  logsButton.addEventListener("click", () => {
+    const isHidden = logsContainer.style.display === "none";
+
+    if (isHidden) {
+      renderLogs(logsContainer);
+      logsContainer.style.display = "block";
+      logsButton.textContent = "Ocultar logs";
+    } else {
+      logsContainer.style.display = "none";
+      logsButton.textContent = "Ver últimos 20 logs";
+    }
+  });
+
+  container.append(title, grid, logsButton, logsContainer);
   return container;
 }
 
 function selectRole(role) {
   setState({ role });
+
+  addLog(LOG_EVENTS.ROLE_CHANGE, {
+    rolNuevo: role,
+    user: localStorage.getItem("userName") || null,
+  });
+
   triggerRender();
 }
 
@@ -77,4 +106,23 @@ function createRoleCard({ accent, shortKey, titleKey, descKey, onSelect }) {
   card.addEventListener("click", onSelect);
 
   return card;
+}
+
+function renderLogs(container) {
+  const logs = getLogs()
+    .slice()
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    .slice(0, 20);
+
+  container.innerHTML = "";
+
+  const title = document.createElement("h3");
+  title.textContent = "Últimos 20 logs";
+
+  const textArea = document.createElement("textarea");
+  textArea.className = "logs-panel__textarea";
+  textArea.readOnly = true;
+  textArea.value = JSON.stringify(logs, null, 2);
+
+  container.append(title, textArea);
 }

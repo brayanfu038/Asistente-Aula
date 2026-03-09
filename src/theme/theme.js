@@ -5,6 +5,7 @@
 // - Aplicar tema al <html>
 // - Alternar tema
 // - Mantener consistencia con localStorage
+import { addLog, LOG_EVENTS } from "../services/logService";
 
 const THEME_KEY = "theme";
 const DEFAULT_THEME = "dark";
@@ -31,8 +32,16 @@ export function getCurrentTheme() {
 export function applyTheme(theme) {
   if (theme !== "light" && theme !== "dark") return;
 
+  addLog(LOG_EVENTS.THEME_CHANGE, {
+    anteriorTema: getCurrentTheme(),
+    nuevoTema: theme,
+    user: localStorage.getItem("userName") || null,
+  });
+
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem(THEME_KEY, theme);
+
+  
 }
 
 /**

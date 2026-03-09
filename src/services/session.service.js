@@ -33,6 +33,9 @@ export async function createSession() {
     err.code = "errors.tempCreateSession";
     throw err;
   }
+  addLog(LOG_EVENTS.LOGIN, {
+    user: localStorage.getItem("userName") || null,
+  });
 
   return makeSession();
 }
@@ -43,6 +46,10 @@ export async function createSession() {
  */
 export async function closeSession(session) {
   await sleep(CLOSE_DELAY_MS);
+
+  addLog(LOG_EVENTS.LOGOUT, {
+    user: localStorage.getItem("userName") || null,
+  });
 
   if (!session) {
     // Si no hay sesión, devolvemos null para indicar "nada que cerrar".

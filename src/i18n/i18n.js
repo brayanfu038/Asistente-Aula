@@ -3,6 +3,7 @@
 // Regla: la UI nunca guarda textos finales, guarda keys (messageKey, errorKey) y traduce en render.
 
 import { messages } from "./messages.js";
+import { addLog, LOG_EVENTS } from "../services/logService.js";
 
 const LS_LANG = "lang"; // "es" | "en"
 const DEFAULT_LANG = "en";
@@ -52,6 +53,11 @@ export function initLanguage() {
 export function setLanguage(lang) {
   const next = lang === "es" ? "es" : "en";
   localStorage.setItem(LS_LANG, next);
+  addLog(LOG_EVENTS.LANGUAGE_CHANGE, {
+    LenguajeInicial: getLanguage(),
+    LenguajeFinal: next === "es" ? "inglés" : "Español",
+    user: localStorage.getItem("userName") || null,
+  });
   return next;
 }
 
