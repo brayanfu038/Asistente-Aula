@@ -5,6 +5,7 @@
 // - Aplicar tema al <html>
 // - Alternar tema
 // - Mantener consistencia con localStorage
+import { addLog, LOG_EVENTS } from "../services/logService";
 
 const THEME_KEY = "theme";
 const DEFAULT_THEME = "dark";

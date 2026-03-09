@@ -55,7 +55,7 @@ export function setLanguage(lang) {
   localStorage.setItem(LS_LANG, next);
   addLog(LOG_EVENTS.LANGUAGE_CHANGE, {
     LenguajeInicial: getLanguage(),
-    LenguajeFinal: next,
+    LenguajeFinal: next === "es" ? "inglés" : "Español",
     user: localStorage.getItem("userName") || null,
   });
   return next;

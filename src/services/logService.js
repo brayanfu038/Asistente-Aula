@@ -7,6 +7,7 @@ export const LOG_EVENTS = {
   LOGOUT: 'LOGOUT',
   COPY_CODE: 'COPY_CODE',
   GO_HOME: 'GO_HOME',
+  ROLE_CHANGE: 'ROLE_CHANGE',
 };
 
 function readLogs() {
@@ -48,6 +49,13 @@ export function addLog(eventType, details = {}) {
 
 export function getLogs() {
   return readLogs();
+}
+
+export function getLastLogs(limit = 20) {
+  return readLogs()
+    .slice()
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    .slice(0, limit);
 }
 
 export function clearLogs() {

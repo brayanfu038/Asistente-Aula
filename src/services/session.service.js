@@ -47,6 +47,10 @@ export async function createSession() {
 export async function closeSession(session) {
   await sleep(CLOSE_DELAY_MS);
 
+  addLog(LOG_EVENTS.LOGOUT, {
+    user: localStorage.getItem("userName") || null,
+  });
+
   if (!session) {
     // Si no hay sesión, devolvemos null para indicar "nada que cerrar".
     return null;
