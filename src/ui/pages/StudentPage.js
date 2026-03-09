@@ -27,6 +27,10 @@ export function createStudentPage() {
   label.className = "field__label";
   label.textContent = t("student.codeLabel");
 
+  const feedback = document.createElement("div");
+  feedback.className = "field__feedback";
+
+
   const input = document.createElement("input");
   input.className = "input";
   input.type = "text";
@@ -35,11 +39,42 @@ export function createStudentPage() {
   input.placeholder = t("student.codePlaceholder");
   input.value = state.ui?.studentCodeDraft || "";
 
+  let cleanTimer = null;
+
   input.addEventListener("input", (e) => {
-    setUI({ studentCodeDraft: String(e.target.value ?? "") });
+    const value = String(e.target.value ?? "");
+
+    // cancelar limpieza anterior
+    clearTimeout(cleanTimer);
+
+    cleanTimer = setTimeout(() => {
+
+      const cleaned = value.replace(/[^\d]/g, "");
+
+      if (value !== cleaned) {
+
+        input.value = cleaned;
+
+        feedback.textContent = "⚠ " + t("student.Numbers");
+
+        setUI({
+          studentCodeDraft: cleaned
+        });
+
+      } else {
+
+        feedback.textContent = "";
+
+        setUI({
+          studentCodeDraft: cleaned
+        });
+
+      }
+
+    }, 500); // espera medio segundo
   });
 
-  field.append(label, input);
+  field.append(label, input, feedback);
 
   const btnJoin = document.createElement("button");
   btnJoin.className = "btn btn--primary";
@@ -47,29 +82,43 @@ export function createStudentPage() {
   btnJoin.textContent = t("student.join");
 
   btnJoin.addEventListener("click", () => {
+
     const draft = String(state.ui?.studentCodeDraft || "");
     const code = normalizeCode(draft);
 
-    if (!isValidCode(code)) {
-      setUI({
-        errorKey: "errors.invalidCode",
-        errorParams: null,
-        messageKey: "",
-        messageParams: null,
-      });
-      triggerRender();
+    // código incompleto
+    if (code.length < 6) {
+      feedback.textContent = "⚠ " + t("student.codeIncomplete");
       return;
     }
+    btnJoin.disabled = true;
+    // mostrar procesando
+    feedback.textContent = "⏳ " + t("student.processing");
 
-    // En esta fase solo confirmamos intención (UI); no validamos contra backend aún.
-    setUI({
-      errorKey: "",
-      errorParams: null,
-      messageKey: "student.joining",
-      messageParams: null,
-    });
+    // simulación async
+    setTimeout(() => {
 
-    triggerRender();
+      const isValid = code === "202114796"; // código válido simulado
+
+      if (isValid) {
+
+        feedback.textContent = "✅ " + t("student.validCode");
+
+        setUI({
+          session: {
+            code,
+            status: "open"
+          }
+        });
+
+      } else {
+
+        feedback.textContent = "❌ " + t("student.invalidCode");
+
+      }
+      btnJoin.disabled = false;
+
+    }, 1200); // simula espera de servidor
   });
 
   const btnBack = document.createElement("button");
